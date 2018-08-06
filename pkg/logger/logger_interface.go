@@ -1,6 +1,10 @@
 package logger
 
-type LoggerInterface interface{
+import (
+	"fmt"
+)
+
+type loggerInterface interface{	
 	Debugf(format string, args ...interface{})
 	Infof(format string, args ...interface{})
 	Printf(format string, args ...interface{})
@@ -26,43 +30,24 @@ type LoggerInterface interface{
 	Warningln(args ...interface{})
 	Errorln(args ...interface{})
 	Fatalln(args ...interface{})
-	Panicln(args ...interface{})
+	Panicln(args ...interface{})	
 }
 
-type FieldInterface interface{
-	WithFields(map[string]interface{}) LoggerInterface
-	WithField(string, interface{}) LoggerInterface
-}
+var registry = make(map[string]logInitFunc)
 
-var registry = make(map[string]LogInitFunc)
+type logInitFunc func() (loggerInterface, error)
 
-type LogInitFunc func(map[string]string) (LoggerInterface, error)
-
-func Register(name string, logInitFunc LogInitFunc){
+func Register(name string, lIFunc logInitFunc){
 	if _, ok := registry[name]; ok {
 		panic(fmt.Sprintf("%s is already registered", name))
 	}
-	registry[name] = logInitFunc
+	registry[name] = lIFunc
 }
 
-func Get(name string, config map[string]string)(LoggerInterface, error){
+func Get(name string)(LoggerInterface, error){
 	f, ok := registry[name]
 	if !ok {
 		return nil, fmt.Errorf("logger %q not found", name)
 	}
-	return f(config)
-}
-
-var loggerInterfaceInstance LoggerInterface
-
-// TODO: Make a init call from server init time and set the logger from config as this has to check every time.
-func getOrCreate() LoggerInterface{ 
-	if loggerInterfaceInstance == nil{		
-		loggerInterfaceInstance = createLoggerInterfaceInstance()
-	}
-	return loggerInterfaceInstance
-}
-
-func createLoggerInterfaceInstance LoggerInterface{
-	Get("logrus")
+	return f()
 }

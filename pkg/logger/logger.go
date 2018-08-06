@@ -2,20 +2,26 @@ package logger
 
 import (
 	"context"
-	"fmt"
+	"github.com/voonik/framework/pkg/config"
 )
 
+var log Logger
+
 type Logger struct{
-	logInterface LoggerInterface	
+	LoggerInterface	
 	ctx context.Context
 }
 
-func getLoggerWithContext(ctx context.Context) LoggerInterface{		
-	lg := getOrCreate()
-	lg.WithField("TraceID", getTraceID(ctx))
-	return lg
+func Init(){
+	if Config.logger == "" {
+		Config.logger = "logrus"
+	}
+	log, _ = Get(Config.logger)
 }
 
-func getLogger() LoggerInterface{
-	return getOrCreate()
+func getLoggerWithContext(ctx context.Context) (loggerInterface, error) {		
+		
+	// tid,_ := getTraceID(ctx)
+	// lg.WithField("TraceID", tid)
+	return log
 }

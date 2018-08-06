@@ -8,7 +8,7 @@ func init(){
 	Register("logrus", NewLogrus)
 }
 
-func NewLogrus(config map[string]string){
-	log := logrus.New()
+func NewLogrus() (*logrus.Logger,error){
+	log := logrus.New()	
 	return log,nil	
 }

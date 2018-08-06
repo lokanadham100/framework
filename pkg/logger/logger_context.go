@@ -1,29 +1,38 @@
 package logger
 
-type LoggerContext interface{
-	LoggerFromContext()
-	ContextWithLogger()
-}
+import (
+	"fmt"
+	"context"	
+)
 
-func getTraceID(ctx context.Context) string{
-	GetLogContext(ctx,"jaeger")
-}
+// type LoggerContext interface{
+// 	LoggerFromContext()
+// 	ContextWithLogger()
+// }
 
-type LogInitFunc func(context.Context) (string, error)
+// func getTraceID(ctx context.Context) (string,error){
+// 	return GetLogContext(ctx,"jaeger")
+// }
 
-var logContextRegistry = make(map[string]LogTraceIdFunc)
+// type LogTraceIdFunc func(context.Context) (string, error)
 
-func RegisterLogContext(name string, logTraceIdFunc LogTraceIdFunc){
-	if _, ok := logContextRegistry[name]; ok {
-		panic(fmt.Sprintf("%s is already registered", name))
-	}
-	logContextRegistry[name] = logInitFunc
-}
+// var logContextRegistry = make(map[string]LogTraceIdFunc)
 
-func GetLogContext(ctx context.Context, name string)(string, error){
-	f, ok := logContextRegistry[name]
-	if !ok {
-		return nil, fmt.Errorf("logger %q not found", name)
-	}
-	return f(ctx)
+// func RegisterLogContext(name string, logTraceIdFunc LogTraceIdFunc){
+// 	if _, ok := logContextRegistry[name]; ok {
+// 		panic(fmt.Sprintf("%s is already registered", name))
+// 	}
+// 	logContextRegistry[name] = logTraceIdFunc
+// }
+
+// func GetLogContext(ctx context.Context, name string)(string, error){
+// 	f, ok := logContextRegistry[name]
+// 	if !ok {
+// 		return "", fmt.Errorf("logger %q not found", name)
+// 	}
+// 	return f(ctx)
+// }
+
+func getTraceAndSpanID(ctx context.Context) (string,string,error){
+	return "Trace","Span",nil
 }

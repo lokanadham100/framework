@@ -6,7 +6,7 @@ import (
 
 
 func WithCtx(ctx context.Context) loggerInterface{
-	return &Logger{ctx:ctx, LoggerInterface:getLoggerWithContext(ctx)}
+	return &Logger{ctx:ctx, loggerInterface:getLoggerWithContext(ctx)}
 }
 
 // Debug logs a message at level Debug on the standard logger.

@@ -2,7 +2,8 @@ package server
 
 import (
 	"net"
-	"logger"
+	"github.com/voonik/framework/pkg/logger"
+	"github.com/voonik/framework/pkg/config"
 	"google.golang.org/grpc"
 )
 

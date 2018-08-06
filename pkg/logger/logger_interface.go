@@ -2,6 +2,7 @@ package logger
 
 import (
 	"fmt"
+	"github.com/sirupsen/logrus"
 )
 
 type loggerInterface interface{	
@@ -30,7 +31,10 @@ type loggerInterface interface{
 	Warningln(args ...interface{})
 	Errorln(args ...interface{})
 	Fatalln(args ...interface{})
-	Panicln(args ...interface{})	
+	Panicln(args ...interface{})
+
+	// Need to change this one. Dont know how to use this. So placing here
+	WithField(string,interface{}) *logrus.Entry 
 }
 
 var registry = make(map[string]logInitFunc)
@@ -44,7 +48,7 @@ func Register(name string, lIFunc logInitFunc){
 	registry[name] = lIFunc
 }
 
-func Get(name string)(LoggerInterface, error){
+func Get(name string)(loggerInterface, error){
 	f, ok := registry[name]
 	if !ok {
 		return nil, fmt.Errorf("logger %q not found", name)

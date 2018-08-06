@@ -1,20 +1,19 @@
 package config
 
-type Config struct{
-	logger string
-	logLevel string
+// type logConfig struct{
+// 	logger string
+// 	logLevel string
+// 	tracer string
+// }
 
-	tracer string
-}
+// func Logger() string{
+// 	return conf.logger
+// }
 
-func Logger() string{
-	return conf.logger
-}
+// func LogLevel() string{
+// 	return conf.logLevel
+// }
 
-func LogLevel() string{
-	return conf.logLevel
-}
-
-func Tracer() string{
-	return conf.tracer
-}
+// func Tracer() string{
+// 	return conf.tracer
+// }

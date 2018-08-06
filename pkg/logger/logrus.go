@@ -2,6 +2,7 @@ package logger
 
 import (
 	"github.com/sirupsen/logrus"
+	"github.com/voonik/framework/pkg/config"
 )
 
 func init(){
@@ -9,6 +10,7 @@ func init(){
 }
 
 func NewLogrus() (loggerInterface ,error){
-	log := logrus.New()	
+	log := logrus.New()
+	log.level = config.LogConfigLevel()
 	return log,nil	
 }

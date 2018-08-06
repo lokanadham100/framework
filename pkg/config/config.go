@@ -1,19 +1,27 @@
 package config
 
-// type logConfig struct{
-// 	logger string
-// 	logLevel string
-// 	tracer string
-// }
+import (
+	"fmt"
+	"github.com/micro/go-config"
+	"github.com/micro/go-config/source/file"
+	"github.com/micro/go-config/source/env"
+)
 
-// func Logger() string{
-// 	return conf.logger
-// }
+var Conf *Config
 
-// func LogLevel() string{
-// 	return conf.logLevel
-// }
+type Config struct{
+	LogConfig logConfig 
+	TraceConfig traceConfig
+	MetricConfig metricConfig	
+}
 
-// func Tracer() string{
-// 	return conf.tracer
-// }
+func LoadConfig(){
+	config.Load(
+		file.NewSource(
+			file.WithPath("config/config.toml"),
+		),		
+		env.NewSource(),
+	)
+	config.Scan(&Conf)
+	fmt.Println(Conf)	
+}

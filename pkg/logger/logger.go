@@ -2,7 +2,7 @@ package logger
 
 import (
 	"context"
-	_ "github.com/voonik/framework/pkg/config"
+	"github.com/voonik/framework/pkg/config"
 )
 
 type Logger struct{
@@ -13,10 +13,12 @@ type Logger struct{
 var log loggerInterface
 
 func Init(){	
-	log, _ = Get("logrus")
+	logg := config.LogConfigLogger()
+	log, _ = Get(logg)
 }
 
 func getLoggerWithContext(ctx context.Context) (loggerInterface) {		
+	//TODO : Need to implement tracer as config.
 	tid,sid,_ := getTraceAndSpanID(ctx)
 	return log.WithField("TraceID", tid).WithField("SpanID", sid)
 }

@@ -33,7 +33,7 @@ type loggerInterface interface{
 	Fatalln(args ...interface{})
 	Panicln(args ...interface{})
 
-	// Need to change this one. Dont know how to use this. So placing here
+	//TODO : Need to change this one. Dont know how to use this. So placing here
 	WithField(string,interface{}) *logrus.Entry 
 }
 

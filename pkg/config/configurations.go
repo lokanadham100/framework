@@ -7,7 +7,11 @@ type logConfig struct{
 }
 
 type traceConfig struct{
-	
+	Host string
+	Port string
+	ServiceName string
+	Type string
+	Param float64
 }
 
 type metricConfig struct{

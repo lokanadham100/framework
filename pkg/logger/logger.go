@@ -22,3 +22,7 @@ func getLoggerWithContext(ctx context.Context) (loggerInterface) {
 	tid,sid,_ := getTraceAndSpanID(ctx)
 	return log.WithField("TraceID", tid).WithField("SpanID", sid)
 }
+
+func getLoggerWithName(name string) (loggerInterface){
+	return log.WithField("pkg", name)
+}

@@ -3,6 +3,7 @@ package server
 import (
 	// "net"
 	// "github.com/voonik/framework/pkg/logger"
+	"os"
 	"github.com/voonik/framework/pkg/config"
 	// "google.golang.org/grpc"
 )
@@ -10,9 +11,26 @@ import (
 // type ServiceToHandlerMap map[func(s *grpc.Server,srv interface{})]interface{}
 
 func Init(){
+	checkAndSetEnv()
 	config.LoadConfig()
 }
 
+func checkAndSetEnv(){
+	if env := os.Getenv("ENV"); env == ""{
+		if env := os.Getenv("ENVIRONMENT"); env == ""{
+			setEnv("development")
+		}else{
+			setEnv(env)
+		}
+	}else{
+		setEnv(env)
+	}
+}
+
+func setEnv(env string){
+	os.Setenv("ENV", env)
+	os.Setenv("ENVIRONMENT", env)
+}
 // func RegisterHandlers(srvmap ServiceToHandlerMap){
 // 	listener := createSocket()
 // 	srvr := createGrpcServer()

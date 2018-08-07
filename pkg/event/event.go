@@ -38,7 +38,7 @@ func GetWrapEvent(name string, ctx context.Context, args ...interface{})(WrapInt
 // For Pusher
 var pushRegistry = make(map[string]pushFunc)
 
-type pushFunc func(context.Context, args ...interface{}) (PushInterface, error)
+type pushFunc func() (PushInterface)
 
 func RegisterEventPusher(name string, pFunc pushFunc){
 	if _, ok := pushRegistry[name]; ok {
@@ -47,7 +47,7 @@ func RegisterEventPusher(name string, pFunc pushFunc){
 	pushRegistry[name] = wFunc
 }
 
-func GetPushEvent(name string, ctx context.Context, args ...interface{})(PushInterface, error){
+func GetPushEvent(name string)(PushInterface, error){
 	f, ok := pushRegistry[name]
 	if !ok {
 		return nil, fmt.Errorf("PushInterface %q not found", name)
@@ -64,5 +64,9 @@ func Push(name string, ctx context.Context, args ...interface{}){
 //Developer friendly event API :)
 //Usage: event.Start("function", ctx, "method name", "arg1")
 func Start(name string, ctx context.Context, args ...interface{}) (WrapInterface, error){
-	return GetWrapEvent(name, ctx, args...)
+	if ev, ok := GetWrapEvent(name, ctx, args...); ok == nil{
+		return ev.Start(ctx, args...)
+	}else{
+		return nil,ok
+	}
 }

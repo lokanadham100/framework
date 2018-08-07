@@ -17,3 +17,12 @@ type traceConfig struct{
 type metricConfig struct{
 
 }
+
+type databaseConfig struct {
+	User     string
+	Password string
+	Name     string
+	Host     string
+	Port     string
+}
+

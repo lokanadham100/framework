@@ -1,5 +1,6 @@
 package config
 
+//logger
 func LogConfigLogger() string{
 	return Conf.LogConfig.Logger
 }
@@ -13,6 +14,7 @@ func LogConfigOutput() string{
 }
 
 
+//tracer
 func TraceConfigHost() string{
 	return Conf.TraceConfig.Host
 }
@@ -32,3 +34,10 @@ func TraceConfigType() string{
 func TraceConfigParam() float64{
 	return Conf.TraceConfig.Param
 }
+
+
+//database
+func DatabaseConfig() *databaseConfig{
+	return &Conf.DatabaseConfig
+}
+

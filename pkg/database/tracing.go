@@ -5,6 +5,8 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+var eventDispatcher, _ = event.GetWrapEvent("database")
+
 func gormCreateStarted(scope *gorm.Scope) {	
 	defaultGormStarted(scope)	
 }
@@ -48,7 +50,7 @@ func gormRowQueryEnded(scope *gorm.Scope) {
 func defaultGormStarted(scope *gorm.Scope){
 	if ctx, ok := scope.DB().Get("context"); ok == true {	
 		ctx := ctx.(*context.Context)		
-		dbEvent, _ := event.GetWrapEvent("database", ctx)
+		dbEvent, _ := eventDispatcher.Start(ctx)
 		scope.Set("event",dbEvent)
 	}
 }

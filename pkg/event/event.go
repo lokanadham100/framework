@@ -18,7 +18,7 @@ type PushInterface interface{
 // For Wrapper
 var wrapRegistry = make(map[string]wrapFunc)
 
-type wrapFunc func(context.Context, args ...interface{}) (WrapInterface, error)
+type wrapFunc func(context.Context, args ...interface{}) (WrapInterface, context.Context)
 
 func RegisterEventWrapper(name string, wFunc wrapFunc){
 	if _, ok := wrapRegistry[name]; ok {
@@ -27,10 +27,10 @@ func RegisterEventWrapper(name string, wFunc wrapFunc){
 	wrapRegistry[name] = wFunc
 }
 
-func GetWrapEvent(name string, ctx context.Context, args ...interface{})(WrapInterface, error){
+func GetWrapEvent(name string, ctx context.Context, args ...interface{})(WrapInterface, context.Context){
 	f, ok := wrapRegistry[name]
 	if !ok {
-		return nil, fmt.Errorf("WrapInterface %q not found", name)
+		return nil, nil//fmt.Errorf("WrapInterface %q not found", name)
 	}
 	return f(ctx, args...)
 }

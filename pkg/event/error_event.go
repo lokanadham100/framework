@@ -1,8 +1,8 @@
 package event
 
 type errorEvent struct{	
-	functionName string
 	packageName string
+	functionName string	
 	error string
 	message string
 	extra map[string]interface{}
@@ -17,7 +17,7 @@ func newErrorEvent(ctx context.Context, args ...interface{})(*errorEvent){
 }
 
 func (ee *errorEvent)Push(ctx context.Context, args ...interface{}){
-	
+	ErrorEventCounter(args...)	
 }
 
 func (ee *errorEvent)parseArguments(args ...interface{})(){	

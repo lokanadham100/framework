@@ -9,3 +9,4 @@ import (
 func Init(){	
     opentracing.SetGlobalTracer(tracer)
 }
+

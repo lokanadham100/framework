@@ -15,7 +15,7 @@ type Config struct{
 	LogConfig logConfig 
 	TraceConfig traceConfig
 	MetricConfig metricConfig	
-	DatabaseConfig databaseConfig
+	DatabaseConfig databaseConfig	
 }
 
 func LoadConfig(){
@@ -32,6 +32,7 @@ func readConfigFromFile(){
 	cnfPath = addFileToConfig(cnfPath,"config/redis.toml")
 	cnfPath = addFileToConfig(cnfPath,"config/kafka.toml")
 	cnfPath = addFileToConfig(cnfPath,"config/tracing.toml")
+	cnfPath = addFileToConfig(cnfPath,"config/metrics.toml")
 	cnfPath = append(cnfPath,env.NewSource())
 	config.Load(
 		cnfPath...,		

@@ -15,7 +15,8 @@ type traceConfig struct{
 }
 
 type metricConfig struct{
-
+	Port string
+	ServiceName string
 }
 
 type databaseConfig struct {

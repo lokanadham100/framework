@@ -2,8 +2,8 @@ package event
 
 type databaseEvent struct{
 	startTime time.Time
-	query string
 	qtype string
+	query string	
 	extra map[string]interface{}
 }
 
@@ -12,7 +12,7 @@ func init(){
 }
 
 func newDatabaseEvent(ctx context.Context, args ...interface{})(*databaseEvent, context.Context){
-	return &databaseEvent{}
+	return &databaseEvent{extra:make(map[string]interface{})}
 }
 
 func (de *databaseEvent)Start(ctx context.Context, args ...interface{})(*databaseEvent, context.Context){
@@ -23,7 +23,7 @@ func (de *databaseEvent)Start(ctx context.Context, args ...interface{})(*databas
 }
 
 func (de *databaseEvent)Push(ctx context.Context, args ...interface{}){
-
+	metrics.DatabaseEventHistogram(de.qtype, de.query, time.Since(de.startTime).Seconds())
 }
 
 func (de *databaseEvent)Stop(ctx context.Context, args ...interface{}){
@@ -33,11 +33,18 @@ func (de *databaseEvent)Stop(ctx context.Context, args ...interface{}){
 }
 
 func (de *databaseEvent)startSpan(ctx context.Context)(*databaseEvent, context.Context){
+	span, ctx := opentracing.StartSpanFromContext(ctx, "mysql")	
+	de.extra["span"] = span
 	return de, ctx
 }
 
 func (de *databaseEvent)stopSpan(){
-
+	de.extra["span"].LogFields(
+		log.String("qtype", de.qtype),
+		log.String("query", de.query)
+	)
+	de.extra["span"].SetOperationName(append("mysql-",de.qtype))
+	de.extra["span"].Finish()
 }
 
 func (de *databaseEvent)parseArguments(args ...interface{})(){

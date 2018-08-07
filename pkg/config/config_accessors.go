@@ -41,3 +41,12 @@ func DatabaseConfig() *databaseConfig{
 	return &Conf.DatabaseConfig
 }
 
+
+//metrics
+func MetricConfigPort() string{
+	return Conf.MetricConfig.Port
+}
+
+func MetricConfigServiceName() string{
+	return Conf.MetricConfig.ServiceName
+}

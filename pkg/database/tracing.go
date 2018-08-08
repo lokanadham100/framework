@@ -49,7 +49,7 @@ func gormRowQueryEnded(scope *gorm.Scope) {
 
 func defaultGormStarted(scope *gorm.Scope){
 	if ctx, ok := scope.DB().Get("context"); ok == true {	
-		ctx := ctx.(*context.Context)		
+		ctx := ctx.(context.Context)		
 		dbEvent, _ := eventDispatcher.Start(ctx)
 		scope.Set("event",dbEvent)
 	}
@@ -57,7 +57,7 @@ func defaultGormStarted(scope *gorm.Scope){
 
 func defaultGormEnded(scope *gorm.Scope, qtype string){
 	if dbEvent, ok := scope.Get("event"); ok == true {
-		dbEvent := dbEvent.(*event.WrapInterface)
+		dbEvent := dbEvent.(event.WrapInterface)
 		dbEvent.stop(
 			{
 				'qtype' : qtype,

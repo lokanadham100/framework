@@ -17,7 +17,8 @@ func newDatabaseEvent(ctx context.Context, args ...interface{})(*databaseEvent, 
 
 func (de *databaseEvent)Start(ctx context.Context, args ...interface{})(*databaseEvent, context.Context){
 	// commenting for now as wwe are not using
-	// de.parseArguments(arg...) // TODO : Use of goroutine for this call
+	// de.parseArguments(arg...) 
+	// TODO : Use of goroutine for this call
 	de.startTime = time.Now()	
 	return de.startSpan(ctx)
 }

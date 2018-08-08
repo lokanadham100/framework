@@ -3,14 +3,15 @@ package metrics
 import (
 	"fmt"
 	"net/http"
-
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/voonik/framework/pkg/config"
 )
 
-func init() {
+func init() {	
 	http.Handle("/metrics", promhttp.Handler())
 	log.Fatal(http.ListenAndServe(append(":",config.MetricConfigPort()), nil))
+	registerWithRegistry()	
 }
 
 type serverMetrics struct {
@@ -53,6 +54,14 @@ func NewServerMetrics() *serverMetrics{
 				Buckets: prom.DefBuckets,
 			}[]string{"package_name","function_name"}),
 	}
+}
+
+func registerWithRegistry(){
+	prometheus.MustRegister(defaultServerMetrics.databaseEventCounter)
+	prometheus.MustRegister(defaultServerMetrics.functionEventCounter)
+	prometheus.MustRegister(defaultServerMetrics.errorEventCounter)
+	prometheus.MustRegister(defaultServerMetrics.databaseEventHistogram)
+	prometheus.MustRegister(defaultServerMetrics.functionEventHistogram)
 }
 
 func formatMetricName(s string) string{

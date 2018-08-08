@@ -1,5 +1,17 @@
 package event
 
+import (
+	"fmt"
+	"time"
+	"context"
+
+	// "github.com/opentracing/opentracing-go"
+	// "github.com/opentracing/opentracing-go/log"
+
+	"github.com/voonik/framework/pkg/metrics"
+	"github.com/voonik/framework/pkg/tracer"
+)
+
 type databaseEvent struct{
 	startTime time.Time
 	qtype string
@@ -11,11 +23,11 @@ func init(){
 	RegisterEventWrapper("database", newDatabaseEvent)
 }
 
-func newDatabaseEvent(ctx context.Context, args ...interface{})(*databaseEvent, context.Context){
-	return &databaseEvent{extra:make(map[string]interface{})}
+func newDatabaseEvent(ctx context.Context, args ...interface{})(WrapInterface, context.Context){
+	return &databaseEvent{extra:make(map[string]interface{})}, nil
 }
 
-func (de *databaseEvent)Start(ctx context.Context, args ...interface{})(*databaseEvent, context.Context){
+func (de *databaseEvent)Start(ctx context.Context, args ...interface{})(WrapInterface, context.Context){
 	// commenting for now as wwe are not using
 	// de.parseArguments(arg...) 
 	// TODO : Use of goroutine for this call
@@ -28,33 +40,35 @@ func (de *databaseEvent)Push(ctx context.Context, args ...interface{}){
 }
 
 func (de *databaseEvent)Finish(ctx context.Context, args ...interface{}){
-	de.parseArguments(arg...)
+	de.parseArguments(args...)
 	de.stopSpan()
 	de.Push(ctx, args...)
 }
 
 func (de *databaseEvent)startSpan(ctx context.Context)(*databaseEvent, context.Context){
-	span, ctx := opentracing.StartSpanFromContext(ctx, "mysql")	
+	span, ctx := tracer.StartSpanFromContext(ctx, "mysql")	
 	de.extra["span"] = span
 	return de, ctx
 }
 
 func (de *databaseEvent)stopSpan(){
-	de.extra["span"].LogFields(
-		log.String("qtype", de.qtype),
-		log.String("query", de.query)
+	span := de.extra["span"].(tracer.SpanInterface)
+	span.LogFields(
+		tracer.String("qtype", de.qtype),
+		tracer.String("query", de.query),
 	)
-	de.extra["span"].SetOperationName(append("mysql-",de.qtype))
-	de.extra["span"].Finish()
+	span.SetOperationName(fmt.Sprintf("mysql-%s",de.qtype))
+	span.Finish()
 }
 
-func (de *databaseEvent)parseArguments(args ...interface{})(){
+func (de *databaseEvent)parseArguments(args ...interface{})(){	
 	if len(args) > 0 {
-		if v := args[0].qtype; len(v) > 0 {
-			de.qtype = args[0].qtype
+		pargs := args[0].(map[string]string)
+		if v := pargs["qtype"]; len(v) > 0 {
+			de.qtype = pargs["qtype"]
 		}
-		if v := args[0].query; len(v) > 0 {
-			de.query = args[0].query
+		if v := pargs["query"]; len(v) > 0 {
+			de.query = pargs["query"]
 		}
 	}
 }

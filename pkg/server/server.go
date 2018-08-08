@@ -2,12 +2,15 @@ package server
 
 import (
 	"net"
-	"os"
+	"fmt"
+	"context"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/grpclog"	
+	
 
-	"github.com/voonik/framework/pkg/logger"	
-	"github.com/voonik/framework/pkg/config"
+	"github.com/voonik/framework/pkg/logger"
+	"github.com/voonik/framework/pkg/middleware"
 	"github.com/voonik/framework/pkg/event"		
 )
 
@@ -17,7 +20,7 @@ var serverEvent event.WrapInterface
 var listener net.Listener
 
 func Init(){	
-	serverEvent = event.GetWrapEvent("process", context.Background())
+	serverEvent, _ = event.GetWrapEvent("process", context.Background())
 	createGrpcServer()
 }
 
@@ -49,5 +52,9 @@ func createSocket() net.Listener{
 }
 
 func createGrpcServer() {
-	grpcServer = grpc.NewServer()
+	grpclog.SetLogger(logger.GetLoggerWithName("grpc"))
+	grpcServer = grpc.NewServer(
+		middleware.StreamServerInterceptor(),
+		middleware.UnaryServerInterceptor(),		
+    )	
 }

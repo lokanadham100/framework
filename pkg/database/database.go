@@ -48,5 +48,5 @@ func ConfigDatabaseConnection(){
 	DB.LogMode(true)
 	DB.SetMaxIdleConns(100)  //TODO : make configurable
 	DB.SetMaxOpenConns(100)  //TODO : make configurable
-	DB.SetLogger(logger.getLoggerWithName("mysql"))
+	DB.SetLogger(logger.GetLoggerWithName("mysql"))
 }

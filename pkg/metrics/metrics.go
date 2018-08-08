@@ -6,20 +6,21 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/voonik/framework/pkg/config"
+//	"github.com/voonik/framework/pkg/logger"
 )
 
 func init() {	
 	http.Handle("/metrics", promhttp.Handler())
-	log.Fatal(http.ListenAndServe(append(":",config.MetricConfigPort()), nil))
+	http.ListenAndServe(fmt.Sprintf(":%s",config.MetricConfigPort()), nil)
 	registerWithRegistry()	
 }
 
 type serverMetrics struct {
-	databaseEventCounter          *prom.CounterVec
-	functionEventCounter          *prom.CounterVec
-	errorEventCounter             *prom.CounterVec	
-	databaseEventHistogram        *prom.HistogramVec
-	functionEventHistogram        *prom.HistogramVec
+	databaseEventCounter          *prometheus.CounterVec
+	functionEventCounter          *prometheus.CounterVec
+	errorEventCounter             *prometheus.CounterVec	
+	databaseEventHistogram        *prometheus.HistogramVec
+	functionEventHistogram        *prometheus.HistogramVec
 }
 
 var defaultServerMetrics = NewServerMetrics()
@@ -41,18 +42,18 @@ func NewServerMetrics() *serverMetrics{
 				Name: formatMetricName("errorEventCounter"),
 				Help: "Total number of errors raised",
 			}, []string{"package_name","function_name","error","message"}),
-		databaseEventHistogram: prom.NewHistogramVec(
-			prom.HistogramOpts{
+		databaseEventHistogram: prometheus.NewHistogramVec(
+			prometheus.HistogramOpts{
 				Name: formatMetricName("databaseEventHistogram"),
 				Help:    "Histogram of database query (seconds)",
-				Buckets: prom.DefBuckets,
-			}[]string{"type", "query"}),
-		functionEventHistogram: prom.NewHistogramVec(
-			prom.HistogramOpts{
+				Buckets: prometheus.DefBuckets,
+			}, []string{"type", "query"}),
+		functionEventHistogram: prometheus.NewHistogramVec(
+			prometheus.HistogramOpts{
 				Name: formatMetricName("functionEventHistogram"),
 				Help:    "Histogram of function execution (seconds)",
-				Buckets: prom.DefBuckets,
-			}[]string{"package_name","function_name"}),
+				Buckets: prometheus.DefBuckets,
+			}, []string{"package_name","function_name"}),
 	}
 }
 
@@ -66,5 +67,9 @@ func registerWithRegistry(){
 }
 
 func formatMetricName(s string) string{
-	return fmt.Sprintf("%s-%s",config.MetricConfigServiceName(),s)
+	if len(config.MetricConfigServiceName()) > 0 {
+		return fmt.Sprintf("%s-%s",config.MetricConfigServiceName(),s)
+	}else{
+		return s
+	}
 }

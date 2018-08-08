@@ -34,7 +34,7 @@ type loggerInterface interface{
 	Panicln(args ...interface{})
 
 	//TODO : Need to change this one. Dont know how to use this. So placing here
-	WithField(string,interface{}) *logrus.Entry 
+	WithField(string,interface{}) *logrus.Entry 	
 }
 
 var registry = make(map[string]logInitFunc)
@@ -54,4 +54,9 @@ func Get(name string)(loggerInterface, error){
 		return nil, fmt.Errorf("logger %q not found", name)
 	}
 	return f()
+}
+
+//TODO : Need to remove
+func GetLoggerWithName(name string) (*logrus.Entry){
+	return log.WithField("pkg", name)
 }

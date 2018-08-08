@@ -11,6 +11,11 @@ func init(){
 
 func NewLogrus() (loggerInterface ,error){
 	log := logrus.New()
-	log.level = config.LogConfigLevel()
+	log.Level = getLogLevel()
 	return log,nil	
+}
+
+func getLogLevel() logrus.Level{
+	l, _ := logrus.ParseLevel(config.LogConfigLogger())
+	return l
 }

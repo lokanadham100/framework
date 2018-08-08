@@ -1,10 +1,15 @@
-package trace
+package tracer
 
 import (
-	"github.com/opentracing/opentracing-go"
-	"github.com/uber/jaeger-client-go"
+    "fmt"
+	"time"    
+
+    "github.com/opentracing/opentracing-go"
+	// "github.com/uber/jaeger-client-go"
     jconfig "github.com/uber/jaeger-client-go/config"
+
     "github.com/voonik/framework/pkg/config"
+    // "github.com/voonik/framework/pkg/logger"
 )
 
 func JaegerTracer() (opentracing.Tracer){
@@ -21,7 +26,7 @@ func JaegerTracer() (opentracing.Tracer){
     }
     tracer, _, _ := cfg.New(
         config.TraceConfigServiceName(),
-        jconfig.Logger(logger.getLoggerWithName("opentracing")),
+        // jconfig.Logger(logger.GetLoggerWithName("opentracing")),
     )
     return tracer
 }

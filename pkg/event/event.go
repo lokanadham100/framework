@@ -1,24 +1,25 @@
-package Event
+package event
 
 import (
+	"fmt"
 	"context"
 
 )
 
 type WrapInterface interface{
 	PushInterface
-	Start(context.Context, args ...interface{}) (WrapInterface, context.Context)	
-	Finish(context.Context, args ...interface{})
+	Start(context.Context, ...interface{}) (WrapInterface, context.Context)	
+	Finish(context.Context, ...interface{})
 }
 
 type PushInterface interface{
-	Push(context.Context, args ...interface{})
+	Push(context.Context, ...interface{})
 }
 
 // For Wrapper
 var wrapRegistry = make(map[string]wrapFunc)
 
-type wrapFunc func(context.Context, args ...interface{}) (WrapInterface, context.Context)
+type wrapFunc func(context.Context, ...interface{}) (WrapInterface, context.Context)
 
 func RegisterEventWrapper(name string, wFunc wrapFunc){
 	if _, ok := wrapRegistry[name]; ok {
@@ -44,13 +45,13 @@ func RegisterPushWrapper(name string, pFunc pushFunc){
 	if _, ok := pushRegistry[name]; ok {
 		panic(fmt.Sprintf("%s is already registered", name))
 	}
-	pushRegistry[name] = wFunc
+	pushRegistry[name] = pFunc
 }
 
-func GetPushEvent(name string)(PushInterface, error){
+func GetPushEvent(name string)(PushInterface){
 	f, ok := pushRegistry[name]
 	if !ok {
-		return nil, fmt.Errorf("PushInterface %q not found", name)
+		return nil
 	}
 	return f()
 }
@@ -63,7 +64,7 @@ func Push(name string, ctx context.Context, args ...interface{}){
 
 //Developer friendly event API :)
 //Usage: event.Start("function", ctx, "method name", "arg1")
-func Start(name string, ctx context.Context, args ...interface{}) (WrapInterface, error){
+func Start(name string, ctx context.Context, args ...interface{}) (WrapInterface, context.Context){
 	if ev, ok := GetWrapEvent(name, ctx, args...); ok == nil{
 		return ev.Start(ctx, args...)
 	}else{

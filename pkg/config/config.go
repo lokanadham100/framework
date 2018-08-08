@@ -11,17 +11,22 @@ import (
 
 var conf *Config
 
+func init(){
+	loadConfig()
+}
+
 type Config struct{
-	LogConfig logConfig 
+	LogConfig logConfig
 	TraceConfig traceConfig
-	MetricConfig metricConfig	
+	MetricConfig metricConfig
 	DatabaseConfig databaseConfig	
 }
 
-func LoadConfig(){
+func loadConfig(){
 	readConfigFromFile()
 	writeConfigToStruct()	
-	fmt.Println(conf)	
+	fmt.Println(conf)
+	// fmt.Println(config.Map())
 }
 
 func readConfigFromFile(){

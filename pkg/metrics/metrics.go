@@ -11,7 +11,7 @@ import (
 
 func init() {	
 	http.Handle("/metrics", promhttp.Handler())
-	http.ListenAndServe(fmt.Sprintf(":%s",config.MetricConfigPort()), nil)
+	go http.ListenAndServe(fmt.Sprintf(":%s",config.MetricConfigPort()), nil)
 	registerWithRegistry()	
 }
 

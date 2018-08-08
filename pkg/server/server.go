@@ -20,22 +20,17 @@ var serverEvent event.WrapInterface
 var listener net.Listener
 
 func Init(){	
+	logger.Init()
 	serverEvent, _ = event.GetWrapEvent("process", context.Background())
 	createGrpcServer()
 }
 
-var grpcServer *grpc.Server
-
-type protoDef func(s *grpc.Server,srv interface{})
-
-func RegisterHandlers(pdef protoDef, handler interface{}){	
-	pdef(grpcServer, handler)
-}
+var GrpcServer *grpc.Server
 
 func Start(){
 	serverEvent.Start(context.Background())
 	listener = createSocket()
-	grpcServer.Serve(listener)
+	GrpcServer.Serve(listener)
 }
 
 func Finish(){
@@ -44,7 +39,7 @@ func Finish(){
 }
 
 func createSocket() net.Listener{	
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 3000))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 10000))
 	if err != nil {
 		logger.Fatalf("failed to listen: %v", err)
 	}
@@ -53,7 +48,7 @@ func createSocket() net.Listener{
 
 func createGrpcServer() {
 	grpclog.SetLogger(logger.GetLoggerWithName("grpc"))
-	grpcServer = grpc.NewServer(
+	GrpcServer = grpc.NewServer(
 		middleware.StreamServerInterceptor(),
 		middleware.UnaryServerInterceptor(),		
     )	

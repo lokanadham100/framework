@@ -12,7 +12,7 @@ type SpanInterface interface{
 	opentracing.Span
 }
 
-func Init(){	
+func init(){	
     opentracing.SetGlobalTracer(JaegerTracer())
 }
 

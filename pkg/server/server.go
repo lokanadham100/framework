@@ -13,18 +13,12 @@ import (
 
 // type ServiceToHandlerMap map[func(s *grpc.Server,srv interface{})]interface{}
 
-var serverEvent = event.GetWrapEvent("process", context.Background())
+var serverEvent event.WrapInterface
 var listener net.Listener
 
-func Init(){
-	checkAndSetEnv()
-	config.LoadConfig()
+func Init(){	
+	serverEvent = event.GetWrapEvent("process", context.Background())
 	createGrpcServer()
-}
-
-func setEnv(env string){
-	os.Setenv("ENV", env)
-	os.Setenv("ENVIRONMENT", env)
 }
 
 var grpcServer *grpc.Server
@@ -36,6 +30,7 @@ func RegisterHandlers(pdef protoDef, handler interface{}){
 }
 
 func Start(){
+	serverEvent.Start(context.Background())
 	listener = createSocket()
 	grpcServer.Serve(listener)
 }
@@ -43,18 +38,6 @@ func Start(){
 func Finish(){
 	listener.Close()
 	serverEvent.Finish(context.Background())
-}
-
-func checkAndSetEnv(){
-	if env := os.Getenv("ENV"); env == ""{
-		if env := os.Getenv("ENVIRONMENT"); env == ""{
-			setEnv("development")
-		}else{
-			setEnv(env)
-		}
-	}else{
-		setEnv(env)
-	}
 }
 
 func createSocket() net.Listener{	

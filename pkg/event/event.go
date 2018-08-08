@@ -40,7 +40,7 @@ var pushRegistry = make(map[string]pushFunc)
 
 type pushFunc func() (PushInterface)
 
-func RegisterEventPusher(name string, pFunc pushFunc){
+func RegisterPushWrapper(name string, pFunc pushFunc){
 	if _, ok := pushRegistry[name]; ok {
 		panic(fmt.Sprintf("%s is already registered", name))
 	}

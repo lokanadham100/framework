@@ -10,6 +10,7 @@ func init(){
 }
 
 func newProcessEvent(ctx context.Context, args ...interface{})(*processEvent, context.Context){
+	checkAndSetEnv()
 	return &processEvent{extra: make(map[string]interface{})}
 }
 
@@ -30,4 +31,21 @@ func (fe *processEvent)Finish(ctx context.Context, args ...interface{}){
 
 func (fe *processEvent)parseArguments(args ...interface{})(){	
 		
+}
+
+func checkAndSetEnv(){
+	if env := os.Getenv("ENV"); env == ""{
+		if env := os.Getenv("ENVIRONMENT"); env == ""{
+			setEnv("development")
+		}else{
+			setEnv(env)
+		}
+	}else{
+		setEnv(env)
+	}
+}
+
+func setEnv(env string){
+	os.Setenv("ENV", env)
+	os.Setenv("ENVIRONMENT", env)
 }

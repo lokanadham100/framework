@@ -56,6 +56,7 @@ func NewServerMetrics() *serverMetrics{
 	}
 }
 
+//TODO : Need to register all grpc apis also, to get 0 count metrics also.
 func registerWithRegistry(){
 	prometheus.MustRegister(defaultServerMetrics.databaseEventCounter)
 	prometheus.MustRegister(defaultServerMetrics.functionEventCounter)

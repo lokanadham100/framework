@@ -9,7 +9,7 @@ import (
 	"github.com/micro/go-config/source/env"
 )
 
-var Conf *Config
+var conf *Config
 
 type Config struct{
 	LogConfig logConfig 
@@ -21,7 +21,7 @@ type Config struct{
 func LoadConfig(){
 	readConfigFromFile()
 	writeConfigToStruct()	
-	fmt.Println(Conf)	
+	fmt.Println(conf)	
 }
 
 func readConfigFromFile(){
@@ -40,7 +40,7 @@ func readConfigFromFile(){
 }
 
 func writeConfigToStruct(){
-	config.Scan(&Conf)	
+	config.Scan(&conf)	
 }
 
 func addFileToConfig(cnfPath []source.Source, filePath string) ([]source.Source){

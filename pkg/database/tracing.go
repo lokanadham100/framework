@@ -5,7 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var eventDispatcher, _ = event.GetWrapEvent("database")
+var eventDispatcher, _ = event.GetWrapEvent("database", context.Background())
 
 func gormCreateStarted(scope *gorm.Scope) {	
 	defaultGormStarted(scope)	
@@ -58,7 +58,8 @@ func defaultGormStarted(scope *gorm.Scope){
 func defaultGormEnded(scope *gorm.Scope, qtype string){
 	if dbEvent, ok := scope.Get("event"); ok == true {
 		dbEvent := dbEvent.(event.WrapInterface)
-		dbEvent.stop(
+		dbEvent.Finish(
+			context.Background(),
 			{
 				'qtype' : qtype,
 				'query' : scope.SQL,

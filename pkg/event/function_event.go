@@ -25,7 +25,7 @@ func (fe *functionEvent)Push(ctx context.Context, args ...interface{}){
 	FunctionEventHistogram(fe.packageName, fe.functionName, time.Since(fe.startTime).Seconds())
 }
 
-func (fe *functionEvent)Stop(ctx context.Context, args ...interface{}){
+func (fe *functionEvent)Finish(ctx context.Context, args ...interface{}){
 	fe.stopSpan()
 	fe.Push(ctx, args...)
 }

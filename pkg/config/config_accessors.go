@@ -2,51 +2,51 @@ package config
 
 //logger
 func LogConfigLogger() string{
-	return Conf.LogConfig.Logger
+	return conf.LogConfig.Logger
 }
 
 func LogConfigLevel() string{
-	return Conf.LogConfig.Level	
+	return conf.LogConfig.Level	
 }
 
 func LogConfigOutput() string{
-	return Conf.LogConfig.Output
+	return conf.LogConfig.Output
 }
 
 
 //tracer
 func TraceConfigHost() string{
-	return Conf.TraceConfig.Host
+	return conf.TraceConfig.Host
 }
 
 func TraceConfigPort() string{
-	return Conf.TraceConfig.Port
+	return conf.TraceConfig.Port
 }
 
 func TraceConfigServiceName() string{
-	return Conf.TraceConfig.ServiceName
+	return conf.TraceConfig.ServiceName
 }
 
 func TraceConfigType() string{
-	return Conf.TraceConfig.Type
+	return conf.TraceConfig.Type
 }
 
 func TraceConfigParam() float64{
-	return Conf.TraceConfig.Param
+	return conf.TraceConfig.Param
 }
 
 
 //database
 func DatabaseConfig() *databaseConfig{
-	return &Conf.DatabaseConfig
+	return &conf.DatabaseConfig
 }
 
 
 //metrics
 func MetricConfigPort() string{
-	return Conf.MetricConfig.Port
+	return conf.MetricConfig.Port
 }
 
 func MetricConfigServiceName() string{
-	return Conf.MetricConfig.ServiceName
+	return conf.MetricConfig.ServiceName
 }

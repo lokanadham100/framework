@@ -27,7 +27,7 @@ func (de *databaseEvent)Push(ctx context.Context, args ...interface{}){
 	metrics.DatabaseEventHistogram(de.qtype, de.query, time.Since(de.startTime).Seconds())
 }
 
-func (de *databaseEvent)Stop(ctx context.Context, args ...interface{}){
+func (de *databaseEvent)Finish(ctx context.Context, args ...interface{}){
 	de.parseArguments(arg...)
 	de.stopSpan()
 	de.Push(ctx, args...)

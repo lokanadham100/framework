@@ -8,7 +8,7 @@ import (
 type WrapInterface interface{
 	PushInterface
 	Start(context.Context, args ...interface{}) (WrapInterface, context.Context)	
-	Stop(context.Context, args ...interface{})
+	Finish(context.Context, args ...interface{})
 }
 
 type PushInterface interface{
@@ -52,7 +52,7 @@ func GetPushEvent(name string)(PushInterface, error){
 	if !ok {
 		return nil, fmt.Errorf("PushInterface %q not found", name)
 	}
-	return f(ctx, args...)
+	return f()
 }
 
 //Developer friendly push API :)

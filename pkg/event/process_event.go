@@ -3,6 +3,10 @@ package event
 import (
 	"os"
 	"context"
+
+	"github.com/voonik/framework/pkg/logger"
+	"github.com/voonik/framework/pkg/tracer"
+	"github.com/voonik/framework/pkg/metrics"
 )
 
 
@@ -16,26 +20,30 @@ func init(){
 }
 
 func newProcessEvent(ctx context.Context, args ...interface{})(WrapInterface, context.Context){
+	callInits()
 	checkAndSetEnv()
 	return &processEvent{extra: make(map[string]interface{})}, nil
 }
 
 func (pe *processEvent)Start(ctx context.Context, args ...interface{})(WrapInterface, context.Context){
-	// return pe.startSpan(ctx)
 	return pe, ctx
 }
 
 func (fe *processEvent)Push(ctx context.Context, args ...interface{}){
-	// metrics.FunctionEventHistogram(pe.packageName, pe.functionName, time.Since(pe.startTime).Seconds())
+	
 }
 
 func (fe *processEvent)Finish(ctx context.Context, args ...interface{}){
-	// pe.stopSpan()
-	// pe.Push(ctx, args...)
 }
 
 func (fe *processEvent)parseArguments(args ...interface{})(){	
 		
+}
+
+func callInits(){
+	logger.Init()
+	metrics.Init()
+	tracer.Init()
 }
 
 func checkAndSetEnv(){

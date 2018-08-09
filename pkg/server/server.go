@@ -20,7 +20,6 @@ var serverEvent event.WrapInterface
 var listener net.Listener
 
 func Init(){	
-	logger.Init()
 	serverEvent, _ = event.GetWrapEvent("process", context.Background())
 	createGrpcServer()
 }

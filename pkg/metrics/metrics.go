@@ -9,7 +9,7 @@ import (
 //	"github.com/voonik/framework/pkg/logger"
 )
 
-func init() {	
+func Init() {	
 	http.Handle("/metrics", promhttp.Handler())
 	go http.ListenAndServe(fmt.Sprintf(":%s",config.MetricConfigPort()), nil)
 	registerWithRegistry()	
@@ -68,7 +68,7 @@ func registerWithRegistry(){
 
 func formatMetricName(s string) string{
 	if len(config.MetricConfigServiceName()) > 0 {
-		return fmt.Sprintf("%s-%s",config.MetricConfigServiceName(),s)
+		return fmt.Sprintf("%s_%s",config.MetricConfigServiceName(),s)
 	}else{
 		return s
 	}

@@ -5,14 +5,13 @@ import (
 
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/log"
-	// "github.com/voonik/framework/pkg/logger"
 )
 
 type SpanInterface interface{
 	opentracing.Span
 }
 
-func init(){	
+func Init(){	
     opentracing.SetGlobalTracer(JaegerTracer())
 }
 

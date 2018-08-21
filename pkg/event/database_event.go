@@ -53,10 +53,8 @@ func (de *databaseEvent)startSpan(ctx context.Context)(*databaseEvent, context.C
 
 func (de *databaseEvent)stopSpan(){
 	span := de.extra["span"].(tracer.SpanInterface)
-	span.LogFields(
-		tracer.String("qtype", de.qtype),
-		tracer.String("query", de.query),
-	)
+	span.SetTag("qtype", de.qtype)
+	span.SetTag("query", de.query)
 	span.SetOperationName(fmt.Sprintf("mysql-%s",de.qtype))
 	span.Finish()
 }
